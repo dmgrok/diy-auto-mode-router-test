@@ -59,7 +59,7 @@ def X(r):
 
 W, H = 1200, 1000
 fig = plt.figure(figsize=(W / 100, H / 100), dpi=100, facecolor="white")
-ax = fig.add_axes([0.085, 0.195, 0.865, 0.49])
+ax = fig.add_axes([0.085, 0.195, 0.865, 0.53])
 YMIN, YMAX = 45, 92
 ax.set_xlim(BAND_L - 0.03, XMAX); ax.set_ylim(YMIN, YMAX)
 
@@ -96,20 +96,17 @@ ax.set_ylabel("Routed right (accuracy)", fontsize=15, color=INK, labelpad=8)
 ax.plot([X(r) for r in front], [r["right"] for r in front], ls=(0, (1.2, 2.2)), lw=2.6,
         color=INK, zorder=2, dash_capstyle="round")
 
-# markers: red halo area ~ too-weak %, solid dot = router type
-HALO = 38  # pt^2 per too-weak point
+# markers: one plain dot per router, coloured by type
 for r in rows:
     x, y = X(r), r["right"]
-    ax.scatter(x, y, s=r["weak"] * HALO, color=DANGER, alpha=0.18, lw=0, zorder=3)
-    ax.scatter(x, y, s=r["weak"] * HALO, facecolor="none", edgecolor=DANGER, lw=1.6, alpha=0.9, zorder=3)
-    ax.scatter(x, y, s=110, color=TYPE_COL[r["kind"]], edgecolor="white", lw=1.5, zorder=4)
+    ax.scatter(x, y, s=130, color=TYPE_COL[r["kind"]], edgecolor="white", lw=1.5, zorder=4)
 
 # labels (offsets in points)
-OFF = {"Qwen3-235B*": (-22, 12, "right"), "Mistral Small 3.2*": (-24, 14, "right"),
-       "gpt-oss-120b*": (16, -22, "left"), "gpt-oss-20b*": (-40, 10, "right"),
+OFF = {"Qwen3-235B*": (-16, 12, "right"), "Mistral Small 3.2*": (-16, 14, "right"),
+       "gpt-oss-120b*": (14, -22, "left"), "gpt-oss-20b*": (-12, 24, "right"),
        "Jev (hosted)": (-16, -4, "right"), "Llama-3.1-8B*": (18, -14, "left"),
-       "GLiClass (CPU)": (22, 2, "left"), "vela3 (CPU)": (22, 4, "left"),
-       "d3-lite (CPU)": (22, -6, "left"), "NadirClaw (CPU)": (22, 0, "left")}
+       "GLiClass (CPU)": (16, -10, "left"), "vela3 (CPU)": (16, 4, "left"),
+       "d3-lite (CPU)": (16, -6, "left"), "NadirClaw (CPU)": (16, 0, "left")}
 for r in rows:
     dx, dy, ha = OFF[r["name"]]
     lbl = f"{r['name']}  {r['right']:.0f}%"
@@ -124,8 +121,8 @@ fastest = min(rows, key=lambda r: r["lat"])
 if fastest is jev:
     nxt = sorted(r["lat"] for r in rows)[1]
     ax.annotate(f"{jev['lat']:.0f} ms, fastest\n({nxt / jev['lat']:.0f}× quicker than the next)",
-                (X(jev), jev["right"]), xytext=(26, -78), textcoords="offset points",
-                fontsize=12, color=TYPE_COL["hosted"], ha="left", va="center",
+                (X(jev), jev["right"]), xytext=(0, -140), textcoords="offset points",
+                fontsize=12.5, color=TYPE_COL["hosted"], ha="center", va="center",
                 arrowprops=dict(arrowstyle="-", color=TYPE_COL["hosted"], lw=1.2), zorder=6)
 
 # ---- headline, subtitle, legend, footnote (figure coords) ----
@@ -136,8 +133,8 @@ fig.text(0.035, 0.975, f"{s['name'].rstrip('*')} is the sweet spot: {s['right']:
          f"{s['rel']:.0f}% of the cost.\nThe catch: it sends {s['weak']:.0f}% of tasks to a model too weak for them.",
          fontsize=24, fontweight="bold", color=INK, va="top", linespacing=1.15)
 front_names = ", ".join(r["name"].rstrip("*").replace(" (CPU)", "") for r in front)
-fig.text(0.035, 0.88, f"Up and left is better. The dotted line links the routers nobody beats on both price\nand accuracy: {front_names}.\n"
-         "Paying more mostly buys fewer bad picks (smaller red rings).",
+fig.text(0.035, 0.872, f"Up and left is better. The dotted line links the routers nobody beats on both price\nand accuracy: {front_names}.\n"
+         "Paying more mostly buys fewer tasks sent to a model too weak for them (red figures).",
          fontsize=15.5, color="#333333", va="top", linespacing=1.25)
 
 # legend row
@@ -145,16 +142,8 @@ handles = [Line2D([], [], ls="", marker="o", ms=11, color=TYPE_COL[k], mec="whit
            for k in ("hosted", "openrouter", "cpu")]
 handles += [plt.Rectangle((0, 0), 1, 1, color="#D6F0CF", label="Most attractive"),
             Line2D([], [], ls=(0, (1.2, 2.2)), lw=2.6, color=INK, label="Pareto line")]
-fig.legend(handles=handles, loc="upper left", bbox_to_anchor=(0.03, 0.775), ncol=5, frameon=False,
+fig.legend(handles=handles, loc="upper left", bbox_to_anchor=(0.03, 0.768), ncol=5, frameon=False,
            fontsize=13.5, handletextpad=0.4, columnspacing=1.3)
-lg = fig.add_axes([0.04, 0.705, 0.9, 0.035]); lg.axis("off"); lg.set_xlim(0, 1); lg.set_ylim(0, 1)
-lg.text(0, 0.5, "Red ring = tasks sent to a model too weak for them:", fontsize=13.5, color=DANGER,
-        va="center", fontweight="bold")
-for i, v in enumerate((5, 15, 30)):
-    cx = 0.47 + i * 0.09
-    lg.scatter(cx, 0.5, s=v * HALO, color=DANGER, alpha=0.18, lw=0, clip_on=False)
-    lg.scatter(cx, 0.5, s=v * HALO, facecolor="none", edgecolor=DANGER, lw=1.6, clip_on=False)
-    lg.text(cx + 0.03, 0.5, f"{v}%", fontsize=13, color=DANGER, va="center")
 
 fig.text(0.035, 0.022,
          f"67 one-line coding requests, 3 runs each, with my 2 routing rules. Labels are my judgement; gaps under ~10 points are\n"
@@ -167,6 +156,11 @@ for _t in fig.texts + ax.texts:
     _b = _t.get_window_extent(_r)
     if _b.x0 < 0 or _b.x1 > W or _b.y0 < 0 or _b.y1 > H:
         print("CLIPPED:", _t.get_text()[:40], _b)
+_bb = [(t.get_text()[:25], matplotlib.text.Text.get_window_extent(t, _r)) for t in ax.texts + fig.texts]  # text only, no arrows
+for i in range(len(_bb)):
+    for j in range(i + 1, len(_bb)):
+        if _bb[i][1].overlaps(_bb[j][1]):
+            print("OVERLAP:", _bb[i][0], "|", _bb[j][0])
 fig.savefig(os.path.join(HERE, "chart_pareto.png"), dpi=100, facecolor="white")
 print("Pareto:", [r["name"] for r in front])
 for r in sorted(rows, key=lambda r: -r["right"]):
