@@ -51,7 +51,7 @@ def dominated(a):
 front = sorted([r for r in rows if not dominated(r)], key=lambda r: r["cost"])
 
 # x mapping: log10(cost) for API routers; CPU ($0) gets its own band at the far left
-XMIN, XMAX = math.log10(mx * 0.07), math.log10(mx * 1.35)
+XMIN, XMAX = math.log10(mx * 0.07), math.log10(mx * 2.1)
 BAND_L, BAND_R = XMIN - 0.42, XMIN - 0.12      # local band, then a visible break
 CPU_X = (BAND_L + BAND_R) / 2
 def X(r):
@@ -102,16 +102,21 @@ for r in rows:
     ax.scatter(x, y, s=130, color=TYPE_COL[r["kind"]], edgecolor="white", lw=1.5, zorder=4)
 
 # labels (offsets in points)
-OFF = {"Qwen3-235B*": (-16, 12, "right"), "Mistral Small 3.2*": (-16, 14, "right"),
-       "gpt-oss-120b*": (14, -22, "left"), "gpt-oss-20b*": (-12, 24, "right"),
-       "Jev (hosted)": (-16, -4, "right"), "Llama-3.1-8B*": (18, -14, "left"),
+OFF = {"Qwen3-235B*": (14, 30, "left"), "Mistral Small 3.2*": (-26, 40, "right"),
+       "gpt-oss-120b*": (14, -20, "left"), "gpt-oss-20b*": (-12, 24, "right"),
+       "Jev (hosted)": (-16, -26, "right"), "Llama-3.1-8B*": (18, -14, "left"),
        "GLiClass (CPU)": (16, -10, "left"), "vela3 (CPU)": (16, 4, "left"),
        "d3-lite (CPU)": (16, -6, "left"), "NadirClaw (CPU)": (16, 0, "left")}
+LEADER = {"Qwen3-235B*", "Mistral Small 3.2*"}
 for r in rows:
     dx, dy, ha = OFF[r["name"]]
     lbl = f"{r['name']}  {r['right']:.0f}%"
     ax.annotate(lbl, (X(r), r["right"]), xytext=(dx, dy), textcoords="offset points",
                 ha=ha, va="center", fontsize=14.5, fontweight="bold", color=INK, zorder=6)
+    if r["name"] in LEADER:  # short leader line from dot to the label block
+        ax.annotate("", (X(r), r["right"]), xytext=(dx, dy - 26),
+                    textcoords="offset points",
+                    arrowprops=dict(arrowstyle="-", color="#888888", lw=1, shrinkA=0, shrinkB=5), zorder=5)
     ax.annotate(f"{r['weak']:.0f}% too weak", (X(r), r["right"]), xytext=(dx, dy - 17),
                 textcoords="offset points", ha=ha, va="center", fontsize=12, color=DANGER, zorder=6)
 
@@ -121,7 +126,7 @@ fastest = min(rows, key=lambda r: r["lat"])
 if fastest is jev:
     nxt = sorted(r["lat"] for r in rows)[1]
     ax.annotate(f"{jev['lat']:.0f} ms, fastest\n({nxt / jev['lat']:.0f}× quicker than the next)",
-                (X(jev), jev["right"]), xytext=(0, -140), textcoords="offset points",
+                (X(jev), jev["right"]), xytext=(14, -150), textcoords="offset points",
                 fontsize=12.5, color=TYPE_COL["hosted"], ha="center", va="center",
                 arrowprops=dict(arrowstyle="-", color=TYPE_COL["hosted"], lw=1.2), zorder=6)
 
