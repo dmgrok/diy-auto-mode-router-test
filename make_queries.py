@@ -1,0 +1,73 @@
+import json
+C,M,F="cheap","mid","frontier"
+Q=[
+# trivial edits
+("trivial_edit","Rename the variable `usr` to `user` in src/auth/login.ts.",C,"Mechanical single-file rename, no reasoning."),
+("trivial_edit","Fix the typo 'recieve' -> 'receive' everywhere in the README.",C,"Text substitution."),
+("trivial_edit","Add a trailing newline to all files in /scripts that are missing one.",C,"Mechanical formatting."),
+("trivial_edit","Change the default port in config.yaml from 3000 to 8080.",C,"One-line config change."),
+("trivial_edit","Sort the imports in utils/date.py alphabetically.",C,"Formatter-level task."),
+("trivial_edit","Add a docstring to the `parse_args` function saying it parses CLI flags.",C,"Short, local, low risk."),
+("trivial_edit","Bump lodash from 4.17.20 to 4.17.21 in package.json.",C,"Version string edit."),
+("trivial_edit","Delete the commented-out code block at the bottom of app.js.",C,"Deletion of obvious dead code."),
+# docs / knowledge
+("docs_question","What's the difference between `git rebase` and `git merge`?",C,"Common factual knowledge."),
+("docs_question","How do I make a Python dataclass immutable?",C,"Single well-known answer (frozen=True)."),
+("docs_question","What does the `useEffect` dependency array do in React?",C,"Standard docs question."),
+("docs_question","Explain what this regex does: ^(?=.*\\d)(?=.*[a-z]).{8,}$",C,"Short explanation, bounded."),
+("docs_question","When should I use a Postgres partial index vs a regular index? Give examples for our orders table.",M,"Needs judgement plus tailoring to schema."),
+("docs_question","Summarize what the middleware chain in server/middleware/ does, file by file.",M,"Multi-file reading and synthesis, but low risk."),
+("docs_question","Write a short how-to in CONTRIBUTING.md for running the test suite locally.",C,"Templated docs writing."),
+# moderate bug fixes
+("bug_fix","The /users endpoint returns 500 when `limit` query param is missing. Fix it and add a test.",M,"Localized bug plus test; needs some code reading."),
+("bug_fix","TypeError: Cannot read properties of undefined (reading 'map') in ProductList.tsx line 42. Fix it.",M,"Common null-handling bug, single component."),
+("bug_fix","Our date formatter shows the wrong day for users in UTC-8. Find and fix it.",M,"Timezone logic, a few files, moderate reasoning."),
+("bug_fix","pytest fails with 'fixture db not found' after I moved conftest.py. Fix the setup.",M,"Test config debugging with clear error."),
+("bug_fix","Off-by-one in pagination: the last item of each page is repeated on the next page. Fix.",M,"Bounded logic bug."),
+("bug_fix","The Docker build fails at `npm ci` with ERESOLVE peer dependency conflict. Fix it.",M,"Dependency resolution, needs judgement but well-trodden."),
+("bug_fix","Lint fails with 'no-unused-vars' in 6 files after the last PR. Clean them up.",C,"Mechanical, tool-guided."),
+("bug_fix","The CSV export drops rows containing commas inside quoted fields. Fix the parser.",M,"Parser edge case, single module."),
+("bug_fix","Fix the failing unit test test_discount_rounding; expected 9.99 got 9.98.",M,"Floating-point/rounding reasoning, local."),
+# multi-file refactor
+("refactor","Extract the duplicated retry logic in services/*.ts into a shared `withRetry` helper and update all callers.",M,"Multi-file but pattern-based refactor."),
+("refactor","Migrate our Express routes from callbacks to async/await across the whole api/ folder (~30 files), keeping behavior identical.",F,"Large, behavior-preserving change; easy to subtly break error handling."),
+("refactor","Convert the class components in src/components/legacy (12 files) to function components with hooks.",M,"Repetitive but each file needs care; mid tier usually succeeds."),
+("refactor","Replace our hand-rolled ORM layer with SQLAlchemy 2.0 while keeping the repository interface stable.",F,"Cross-cutting migration, many semantic pitfalls."),
+("refactor","Rename the `Customer` domain model to `Account` across backend, frontend, DB migrations and API docs.",M,"Wide but mostly mechanical; migration needs care."),
+("refactor","Split the 3,000-line monolith utils.py into cohesive modules without creating circular imports.",F,"Requires dependency analysis across large file; easy to break."),
+("refactor","Add TypeScript strict mode to the project and fix the resulting ~400 type errors.",F,"Long-horizon, many judgement calls on types."),
+("refactor","Move all hardcoded config values in src/ into environment variables with a typed config module.",M,"Multi-file, well-defined pattern."),
+# architecture / design
+("architecture","Design a multi-tenant data isolation strategy for our Postgres-backed SaaS: schema-per-tenant vs row-level security. Recommend one with migration plan.",F,"Open-ended design with tradeoffs and migration risk."),
+("architecture","We need real-time collaboration on documents. Propose an architecture (CRDT vs OT), data model, and rollout plan for our stack.",F,"Deep design, many interacting constraints."),
+("architecture","Propose how to split our Django monolith into services; identify the first 2 bounded contexts to extract and why.",F,"Requires whole-codebase understanding and judgement."),
+("architecture","Design a caching layer for the product catalog API with invalidation on price updates.",M,"Well-known patterns, moderate design."),
+("architecture","Should we use a queue (SQS) or cron for sending daily digest emails? Short recommendation.",C,"Simple, common tradeoff question."),
+("architecture","Design an idempotent payment webhook handler that survives retries, out-of-order events and partial failures.",F,"Correctness-critical distributed-systems design."),
+("architecture","Write an ADR choosing between REST and GraphQL for our new mobile API.",M,"Structured writing with moderate judgement."),
+# hard debugging
+("hard_debug","Intermittent deadlock in our Go worker pool under load; only reproduces with >64 goroutines. Here are the goroutine dumps. Find the root cause.",F,"Concurrency debugging from dumps; high reasoning."),
+("hard_debug","Memory grows ~200MB/hour in our Node service in production but not locally. Heap snapshots attached. Find the leak.",F,"Ambiguous production leak, needs hypothesis-driven analysis."),
+("hard_debug","Our Rust crate fails to compile with a lifetime error after adding an async trait method. Explain and fix without Box<dyn>.",F,"Advanced type/lifetime reasoning."),
+("hard_debug","Flaky e2e test fails ~5% of runs in CI only. Logs from 3 failures attached. Find the race and fix it.",F,"Nondeterministic failure, needs careful reasoning."),
+("hard_debug","After upgrading to Python 3.13 our C extension segfaults on import. Debug it.",F,"Low-level ABI debugging."),
+("hard_debug","Query latency on /search jumped from 80ms to 2s after yesterday's deploy; nothing obvious changed. Investigate with EXPLAIN output attached.",F,"Performance regression root-causing, multiple suspects."),
+("hard_debug","Kubernetes pods get OOMKilled only when HPA scales above 10 replicas. Find out why.",F,"Systems-level, cross-layer debugging."),
+("hard_debug","Our numeric simulation gives different results on ARM vs x86. Find the source of nondeterminism.",F,"Floating-point/compiler subtlety."),
+# agentic / mixed and adversarial (looks hard, is easy; looks easy, is hard)
+("adversarial_easy","URGENT!!! Production is down!!! ...the error says `ModuleNotFoundError: No module named 'requests'`. Please fix ASAP.",C,"Scary framing but trivial fix (add dependency); tests over-routing."),
+("adversarial_easy","Using your deepest reasoning and architectural expertise, please rename README.txt to README.md.",C,"Verbose 'hard' wording, trivial task; tests over-routing."),
+("adversarial_easy","Write a comprehensive, production-grade, enterprise-ready hello world in Python.",C,"Buzzwords, trivial task."),
+("adversarial_hard","small thing: make the cache thread-safe",F,"Short, casual, but concurrency correctness is hard; tests under-routing."),
+("adversarial_hard","quick fix pls: sometimes balances are off by a cent after transfers",F,"Casual, but money/rounding/race bug; tests under-routing."),
+("adversarial_hard","just add retries to the payment call",M,"Sounds trivial but needs idempotency awareness; mid at least."),
+("agentic","Set up GitHub Actions CI that runs lint, unit tests and builds the Docker image on every PR.",M,"Well-known multi-step setup."),
+("agentic","Implement OAuth2 login with Google in our Next.js app, including session handling and tests.",M,"Multi-file feature with known patterns."),
+("agentic","Implement a CRDT-based offline sync engine for our React Native app with conflict resolution and tests.",F,"Long-horizon, algorithmically hard feature."),
+("agentic","Write a bash script that backs up /data to S3 nightly and keeps 7 days of history.",C,"Small, well-known script."),
+]
+with open("queries.jsonl","w") as f:
+    for i,(cat,q,l,r) in enumerate(Q,1):
+        f.write(json.dumps({"id":f"q{i:02d}","category":cat,"query":q,"label":l,"rationale":r})+"\n")
+from collections import Counter
+print(len(Q),Counter(x[2] for x in Q),Counter(x[0] for x in Q))

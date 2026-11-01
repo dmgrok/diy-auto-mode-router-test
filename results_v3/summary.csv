@@ -1,0 +1,23 @@
+group,router,mode,runs,n_decisions,accuracy,hard_to_cheap,hard_not_frontier,cheap_to_frontier,over_routing,under_routing,lat_p50_ms,lat_p95_ms,cost_per_1k_usd,consistency,ece,parse_fail,q07,q48
+Hosted closed,Jev 1.14 (OpenRouter),no rules,3,201,0.741,0.091,0.409,0.0,0.104,0.154,164.1,236.4,0.0243,0.985,0.115,0.0,cheap,cheap
+Hosted closed,Jev 1.14 (OpenRouter),rules,3,201,0.741,0.045,0.182,0.0,0.179,0.08,164.1,236.4,0.0243,0.985,,0.0,cheap,frontier
+Open weights,gpt-oss-120b (via OpenRouter),no rules,3,201,0.811,0.121,0.167,0.0,0.035,0.154,908.0,2374.9,0.0204,0.91,0.124,0.005,cheap,cheap
+Open weights,gpt-oss-120b (via OpenRouter),rules,3,201,0.781,0.091,0.167,0.0,0.085,0.134,918.5,2510.3,0.0257,0.866,,0.0,cheap,frontier
+Open weights,gpt-oss-20b (via OpenRouter),no rules,3,201,0.662,0.182,0.758,0.0,0.045,0.294,567.7,1529.4,0.0038,0.955,0.258,0.0,cheap,cheap
+Open weights,gpt-oss-20b (via OpenRouter),rules,3,201,0.766,0.061,0.409,0.0,0.025,0.209,623.5,1497.7,0.0047,0.925,,0.0,cheap,frontier
+Open weights,Qwen3-235B-A22B-2507 (via OpenRouter),no rules,3,201,0.796,0.045,0.227,0.029,0.129,0.075,1023.6,2435.6,0.0335,0.97,0.144,0.0,cheap,mid
+Open weights,Qwen3-235B-A22B-2507 (via OpenRouter),rules,3,201,0.851,0.045,0.091,0.043,0.109,0.04,1235.2,2959.6,0.0392,0.97,,0.0,cheap,frontier
+Open weights,Mistral Small 3.2 24B (via OpenRouter),no rules,3,201,0.791,0.091,0.167,0.043,0.149,0.06,1201.7,2256.1,0.0246,0.97,0.139,0.0,cheap,cheap
+Open weights,Mistral Small 3.2 24B (via OpenRouter),rules,3,201,0.806,0.045,0.136,0.043,0.134,0.06,1178.2,2096.2,0.0309,1.0,,0.0,cheap,frontier
+Open weights,Llama-3.1-8B delimited (via OpenRouter),no rules,3,201,0.697,0.091,0.576,0.029,0.08,0.224,749.6,1350.5,0.0073,0.821,0.187,0.0,cheap,mid
+Open weights,Llama-3.1-8B delimited (via OpenRouter),rules,3,201,0.647,0.136,0.667,0.043,0.06,0.294,812.7,1392.9,0.008,0.776,,0.0,cheap,frontier
+Open weights,vela3-fast 0.4B (local CPU),no rules,3,201,0.597,0.182,0.545,0.043,0.045,0.358,1293.2,1708.1,0.0,1.0,0.279,0.0,cheap,mid
+Open weights,vela3-fast 0.4B (local CPU),rules,3,201,0.627,0.182,0.455,0.043,0.06,0.313,1293.2,1708.1,0.0,1.0,,0.0,cheap,frontier
+Open weights,d3-lite 0.8B (local CPU),no rules,3,201,0.542,0.167,0.803,0.0,0.03,0.428,2128.5,2879.2,0.0,0.94,0.248,0.0,cheap,mid
+Open weights,d3-lite 0.8B (local CPU),rules,3,201,0.592,0.152,0.606,0.0,0.045,0.363,2128.5,2879.2,0.0,0.94,,0.0,cheap,frontier
+Open weights,GLiClass v4 edge 0.4B (local CPU),no rules,3,201,0.672,0.106,0.545,0.0,0.03,0.299,928.0,1320.0,0.0,0.985,0.328,0.0,cheap,mid
+Open weights,GLiClass v4 edge 0.4B (local CPU),rules,3,201,0.697,0.106,0.455,0.0,0.035,0.269,928.0,1320.0,0.0,0.97,,0.0,cheap,frontier
+Open weights,NadirClaw DistilBERT (local CPU),no rules,3,201,0.463,0.091,0.727,0.0,0.284,0.254,27.8,54.7,0.0,1.0,0.49,0.0,mid,cheap
+Open weights,NadirClaw DistilBERT (local CPU),rules (via GLiClass rule checks),3,201,0.502,0.045,0.591,0.0,0.289,0.209,957.6,1345.3,0.0,0.985,,0.0,mid,frontier
+Appendix,Arch-Router 1.5B (appendix; licence),"no rules (v2, majority vote)",3,67,0.582,0.136,0.273,,,,,,,,,,cheap,frontier
+Appendix,RouteLLM BERT (appendix; below chance),"no rules (v2, majority vote)",3,67,0.358,0.409,0.409,,,,,,,,,,frontier,cheap

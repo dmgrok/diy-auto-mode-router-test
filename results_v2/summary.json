@@ -1,0 +1,222 @@
+{
+ "rows": [
+  {
+   "router": "Jev 1.14 (OpenRouter)",
+   "n_decisions": 201,
+   "acc_test_split": 0.737,
+   "acc_all": 0.736,
+   "over_routing": 0.104,
+   "under_routing": 0.159,
+   "frontier_to_cheap": 0.091,
+   "frontier_missed": 0.409,
+   "cheap_to_frontier": 0.0,
+   "lat_p50_ms": 155.9,
+   "lat_p95_ms": 251.2,
+   "router_cost_per_1k_usd": 0.0214,
+   "routed_task_cost_vs_ideal": 0.714,
+   "consistency_3runs": 0.985,
+   "ece": 0.121,
+   "brier": 0.288,
+   "acc_at_conf>=0.8": 0.938,
+   "coverage_conf>=0.8": 0.716,
+   "parse_fail_rate": 0.0,
+   "calibration_source": "route probabilities"
+  },
+  {
+   "router": "Arch-Router 1.5B (local CPU)",
+   "n_decisions": 201,
+   "acc_test_split": 0.558,
+   "acc_all": 0.582,
+   "over_routing": 0.284,
+   "under_routing": 0.134,
+   "frontier_to_cheap": 0.136,
+   "frontier_missed": 0.273,
+   "cheap_to_frontier": 0.087,
+   "lat_p50_ms": 1757.1,
+   "lat_p95_ms": 2539.1,
+   "router_cost_per_1k_usd": 0.0,
+   "routed_task_cost_vs_ideal": 1.166,
+   "consistency_3runs": 1.0,
+   "ece": 0.279,
+   "brier": 0.582,
+   "acc_at_conf>=0.8": 0.694,
+   "coverage_conf>=0.8": 0.731,
+   "parse_fail_rate": 0.239,
+   "calibration_source": "route probabilities"
+  },
+  {
+   "router": "Llama-3.1-8B naive prompt (OpenRouter)",
+   "n_decisions": 201,
+   "acc_test_split": 0.449,
+   "acc_all": 0.423,
+   "over_routing": 0.129,
+   "under_routing": 0.448,
+   "frontier_to_cheap": 0.167,
+   "frontier_missed": 0.758,
+   "cheap_to_frontier": 0.0,
+   "lat_p50_ms": 747.8,
+   "lat_p95_ms": 1851.3,
+   "router_cost_per_1k_usd": 0.0093,
+   "routed_task_cost_vs_ideal": 0.355,
+   "consistency_3runs": 0.776,
+   "ece": 0.434,
+   "brier": null,
+   "acc_at_conf>=0.8": 0.472,
+   "coverage_conf>=0.8": 1.0,
+   "parse_fail_rate": 0.189,
+   "calibration_source": "self-reported confidence"
+  },
+  {
+   "router": "Llama-3.1-8B delimited prompt (OpenRouter)",
+   "n_decisions": 201,
+   "acc_test_split": 0.692,
+   "acc_all": 0.697,
+   "over_routing": 0.08,
+   "under_routing": 0.224,
+   "frontier_to_cheap": 0.091,
+   "frontier_missed": 0.576,
+   "cheap_to_frontier": 0.029,
+   "lat_p50_ms": 749.6,
+   "lat_p95_ms": 1350.5,
+   "router_cost_per_1k_usd": 0.0073,
+   "routed_task_cost_vs_ideal": 0.584,
+   "consistency_3runs": 0.821,
+   "ece": 0.187,
+   "brier": null,
+   "acc_at_conf>=0.8": 0.697,
+   "coverage_conf>=0.8": 1.0,
+   "parse_fail_rate": 0.0,
+   "calibration_source": "self-reported confidence"
+  },
+  {
+   "router": "RouteLLM BERT (local CPU)",
+   "n_decisions": 201,
+   "acc_test_split": 0.288,
+   "acc_all": 0.358,
+   "over_routing": 0.403,
+   "under_routing": 0.239,
+   "frontier_to_cheap": 0.409,
+   "frontier_missed": 0.409,
+   "cheap_to_frontier": 0.565,
+   "lat_p50_ms": 30.4,
+   "lat_p95_ms": 94.2,
+   "router_cost_per_1k_usd": 0.0,
+   "routed_task_cost_vs_ideal": 1.619,
+   "consistency_3runs": 1.0,
+   "ece": null,
+   "brier": null,
+   "acc_at_conf>=0.8": null,
+   "coverage_conf>=0.8": null,
+   "parse_fail_rate": 0.0,
+   "calibration_source": "none"
+  }
+ ],
+ "confusion": {
+  "Jev 1.14 (OpenRouter)": [
+   [
+    51,
+    18,
+    0
+   ],
+   [
+    5,
+    58,
+    3
+   ],
+   [
+    6,
+    21,
+    39
+   ]
+  ],
+  "Arch-Router 1.5B (local CPU)": [
+   [
+    36,
+    27,
+    6
+   ],
+   [
+    9,
+    33,
+    24
+   ],
+   [
+    9,
+    9,
+    48
+   ]
+  ],
+  "Llama-3.1-8B naive prompt (OpenRouter)": [
+   [
+    43,
+    26,
+    0
+   ],
+   [
+    40,
+    26,
+    0
+   ],
+   [
+    11,
+    39,
+    16
+   ]
+  ],
+  "Llama-3.1-8B delimited prompt (OpenRouter)": [
+   [
+    55,
+    12,
+    2
+   ],
+   [
+    7,
+    57,
+    2
+   ],
+   [
+    6,
+    32,
+    28
+   ]
+  ],
+  "RouteLLM BERT (local CPU)": [
+   [
+    27,
+    3,
+    39
+   ],
+   [
+    21,
+    6,
+    39
+   ],
+   [
+    27,
+    0,
+    39
+   ]
+  ]
+ },
+ "bert_thresholds": [
+  0.4230073094367981,
+  0.42747849225997925
+ ],
+ "calib_ids": [
+  "q03",
+  "q06",
+  "q17",
+  "q25",
+  "q27",
+  "q28",
+  "q35",
+  "q37",
+  "q41",
+  "q43",
+  "q44",
+  "q49",
+  "q50",
+  "q53",
+  "q54"
+ ]
+}

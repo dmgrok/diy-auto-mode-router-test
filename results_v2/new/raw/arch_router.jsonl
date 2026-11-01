@@ -1,0 +1,30 @@
+{"router": "arch_router", "run": 0, "id": "q58", "latency_ms": 10575.1, "raw": "{'route': 'other'}", "pred": "mid", "parse_ok": false, "cost": 0.0, "prompt_tokens": 381, "probs": {"cheap": 0.32931221610002676, "mid": 0.056741031215661104, "frontier": 0.6139467526843122}}
+{"router": "arch_router", "run": 0, "id": "q59", "latency_ms": 5026.2, "raw": "{'route': 'cheap'}", "pred": "cheap", "parse_ok": true, "cost": 0.0, "prompt_tokens": 385, "probs": {"cheap": 0.9969697055701396, "mid": 0.000994216618834413, "frontier": 0.0020360778110258414}}
+{"router": "arch_router", "run": 0, "id": "q60", "latency_ms": 3194.8, "raw": "{'route': 'other'}", "pred": "mid", "parse_ok": false, "cost": 0.0, "prompt_tokens": 389, "probs": {"cheap": 0.6900792070898573, "mid": 0.12791284764871738, "frontier": 0.1820079452614254}}
+{"router": "arch_router", "run": 0, "id": "q61", "latency_ms": 2297.2, "raw": "{'route': 'other'}", "pred": "mid", "parse_ok": false, "cost": 0.0, "prompt_tokens": 384, "probs": {"cheap": 2.9830117373501693e-05, "mid": 0.017007205156271847, "frontier": 0.9829629647263546}}
+{"router": "arch_router", "run": 0, "id": "q62", "latency_ms": 2267.1, "raw": "{'route': 'other'}", "pred": "mid", "parse_ok": false, "cost": 0.0, "prompt_tokens": 388, "probs": {"cheap": 2.5599759343594087e-05, "mid": 0.12327070637114841, "frontier": 0.8767036938695079}}
+{"router": "arch_router", "run": 0, "id": "q63", "latency_ms": 2490.5, "raw": "{'route': 'other'}", "pred": "mid", "parse_ok": false, "cost": 0.0, "prompt_tokens": 402, "probs": {"cheap": 0.062332961359145914, "mid": 0.08466140837003366, "frontier": 0.8530056302708205}}
+{"router": "arch_router", "run": 0, "id": "q64", "latency_ms": 2413.0, "raw": "{'route': 'other'}", "pred": "mid", "parse_ok": false, "cost": 0.0, "prompt_tokens": 394, "probs": {"cheap": 4.839324672612158e-05, "mid": 0.745090740870314, "frontier": 0.25486086588295975}}
+{"router": "arch_router", "run": 0, "id": "q65", "latency_ms": 2085.7, "raw": "{'route': 'frontier'}", "pred": "frontier", "parse_ok": true, "cost": 0.0, "prompt_tokens": 401, "probs": {"cheap": 1.006941584884503e-05, "mid": 0.07588496520599745, "frontier": 0.9241049653781537}}
+{"router": "arch_router", "run": 0, "id": "q66", "latency_ms": 2209.0, "raw": "{'route': 'other'}", "pred": "mid", "parse_ok": false, "cost": 0.0, "prompt_tokens": 387, "probs": {"cheap": 0.1381515106344362, "mid": 0.23098545420104127, "frontier": 0.6308630351645225}}
+{"router": "arch_router", "run": 0, "id": "q67", "latency_ms": 2506.8, "raw": "{'route': 'other'}", "pred": "mid", "parse_ok": false, "cost": 0.0, "prompt_tokens": 388, "probs": {"cheap": 0.00015578871015943394, "mid": 0.03088284346297436, "frontier": 0.9689613678268661}}
+{"router": "arch_router", "run": 1, "id": "q58", "latency_ms": 1964.4, "raw": "{'route': 'other'}", "pred": "mid", "parse_ok": false, "cost": 0.0, "prompt_tokens": 381}
+{"router": "arch_router", "run": 1, "id": "q59", "latency_ms": 1889.4, "raw": "{'route': 'cheap'}", "pred": "cheap", "parse_ok": true, "cost": 0.0, "prompt_tokens": 385}
+{"router": "arch_router", "run": 1, "id": "q60", "latency_ms": 1768.6, "raw": "{'route': 'other'}", "pred": "mid", "parse_ok": false, "cost": 0.0, "prompt_tokens": 389}
+{"router": "arch_router", "run": 1, "id": "q61", "latency_ms": 2539.1, "raw": "{'route': 'other'}", "pred": "mid", "parse_ok": false, "cost": 0.0, "prompt_tokens": 384}
+{"router": "arch_router", "run": 1, "id": "q62", "latency_ms": 2569.6, "raw": "{'route': 'other'}", "pred": "mid", "parse_ok": false, "cost": 0.0, "prompt_tokens": 388}
+{"router": "arch_router", "run": 1, "id": "q63", "latency_ms": 2315.2, "raw": "{'route': 'other'}", "pred": "mid", "parse_ok": false, "cost": 0.0, "prompt_tokens": 402}
+{"router": "arch_router", "run": 1, "id": "q64", "latency_ms": 2301.8, "raw": "{'route': 'other'}", "pred": "mid", "parse_ok": false, "cost": 0.0, "prompt_tokens": 394}
+{"router": "arch_router", "run": 1, "id": "q65", "latency_ms": 2525.6, "raw": "{'route': 'frontier'}", "pred": "frontier", "parse_ok": true, "cost": 0.0, "prompt_tokens": 401}
+{"router": "arch_router", "run": 1, "id": "q66", "latency_ms": 2092.9, "raw": "{'route': 'other'}", "pred": "mid", "parse_ok": false, "cost": 0.0, "prompt_tokens": 387}
+{"router": "arch_router", "run": 1, "id": "q67", "latency_ms": 2323.8, "raw": "{'route': 'other'}", "pred": "mid", "parse_ok": false, "cost": 0.0, "prompt_tokens": 388}
+{"router": "arch_router", "run": 2, "id": "q58", "latency_ms": 2142.2, "raw": "{'route': 'other'}", "pred": "mid", "parse_ok": false, "cost": 0.0, "prompt_tokens": 381}
+{"router": "arch_router", "run": 2, "id": "q59", "latency_ms": 2202.5, "raw": "{'route': 'cheap'}", "pred": "cheap", "parse_ok": true, "cost": 0.0, "prompt_tokens": 385}
+{"router": "arch_router", "run": 2, "id": "q60", "latency_ms": 2331.2, "raw": "{'route': 'other'}", "pred": "mid", "parse_ok": false, "cost": 0.0, "prompt_tokens": 389}
+{"router": "arch_router", "run": 2, "id": "q61", "latency_ms": 2029.2, "raw": "{'route': 'other'}", "pred": "mid", "parse_ok": false, "cost": 0.0, "prompt_tokens": 384}
+{"router": "arch_router", "run": 2, "id": "q62", "latency_ms": 2065.6, "raw": "{'route': 'other'}", "pred": "mid", "parse_ok": false, "cost": 0.0, "prompt_tokens": 388}
+{"router": "arch_router", "run": 2, "id": "q63", "latency_ms": 2517.4, "raw": "{'route': 'other'}", "pred": "mid", "parse_ok": false, "cost": 0.0, "prompt_tokens": 402}
+{"router": "arch_router", "run": 2, "id": "q64", "latency_ms": 2011.6, "raw": "{'route': 'other'}", "pred": "mid", "parse_ok": false, "cost": 0.0, "prompt_tokens": 394}
+{"router": "arch_router", "run": 2, "id": "q65", "latency_ms": 2500.6, "raw": "{'route': 'frontier'}", "pred": "frontier", "parse_ok": true, "cost": 0.0, "prompt_tokens": 401}
+{"router": "arch_router", "run": 2, "id": "q66", "latency_ms": 2202.4, "raw": "{'route': 'other'}", "pred": "mid", "parse_ok": false, "cost": 0.0, "prompt_tokens": 387}
+{"router": "arch_router", "run": 2, "id": "q67", "latency_ms": 1961.7, "raw": "{'route': 'other'}", "pred": "mid", "parse_ok": false, "cost": 0.0, "prompt_tokens": 388}

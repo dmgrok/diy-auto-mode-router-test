@@ -1,0 +1,6 @@
+router,n_decisions,acc_test_split,acc_all,over_routing,under_routing,frontier_to_cheap,frontier_missed,cheap_to_frontier,lat_p50_ms,lat_p95_ms,router_cost_per_1k_usd,routed_task_cost_vs_ideal,consistency_3runs,ece,brier,acc_at_conf>=0.8,coverage_conf>=0.8,parse_fail_rate,calibration_source
+Jev 1.14 (OpenRouter),201,0.737,0.736,0.104,0.159,0.091,0.409,0.0,155.9,251.2,0.0214,0.714,0.985,0.121,0.288,0.938,0.716,0.0,route probabilities
+Arch-Router 1.5B (local CPU),201,0.558,0.582,0.284,0.134,0.136,0.273,0.087,1757.1,2539.1,0.0,1.166,1.0,0.279,0.582,0.694,0.731,0.239,route probabilities
+Llama-3.1-8B naive prompt (OpenRouter),201,0.449,0.423,0.129,0.448,0.167,0.758,0.0,747.8,1851.3,0.0093,0.355,0.776,0.434,,0.472,1.0,0.189,self-reported confidence
+Llama-3.1-8B delimited prompt (OpenRouter),201,0.692,0.697,0.08,0.224,0.091,0.576,0.029,749.6,1350.5,0.0073,0.584,0.821,0.187,,0.697,1.0,0.0,self-reported confidence
+RouteLLM BERT (local CPU),201,0.288,0.358,0.403,0.239,0.409,0.409,0.565,30.4,94.2,0.0,1.619,1.0,,,,,0.0,none
