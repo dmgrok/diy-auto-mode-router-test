@@ -1,7 +1,8 @@
 """Router accuracy vs cost per 1,000 decisions, with David's two rules (7 routers shown).
 Styled after Artificial Analysis' 'Index vs Cost per Task' scatter.
-Reads summary.csv next to this file; writes chart_pareto.png (1080x1350, portrait)."""
-import csv, os, math
+Reads counts.json (raw integer counts from score_v3.py) next to this file, so every
+percentage is rounded once from exact counts; writes chart_pareto.png (1080x1350, portrait)."""
+import json, os, math
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -16,7 +17,6 @@ for w in ("Regular", "Medium", "Bold"):
         fm.fontManager.addfont(p)
 plt.rcParams["font.family"] = ["Be Vietnam Pro", "DejaVu Sans"]
 
-N_HARD = 22  # frontier-labelled queries (REPORT.md: 23 cheap / 22 mid / 22 frontier)
 DANGER = "#D7263D"
 INK, MUTED, GRID = "#161616", "#666666", "#E6E6E6"
 TYPE_COL = {"hosted": "#1F6FD1", "openrouter": "#7A3FC4", "cpu": "#3A3A3A"}
@@ -28,18 +28,18 @@ NAMES = {"Jev": "Jev (hosted)", "Qwen3": "Qwen3-235B*", "Mistral": "Mistral Smal
          "NadirClaw": "NadirClaw (CPU)"}
 
 rows = []
-for r in csv.DictReader(open(os.path.join(HERE, "summary.csv"))):
-    if r["group"] == "Appendix" or not r["mode"].startswith("rules"):
+for r in json.load(open(os.path.join(HERE, "counts.json")))["rows"]:
+    if not r["mode"].startswith("rules"):
         continue
-    n, runs = int(r["n_decisions"]), int(r["runs"])
+    n = r["n_decisions"]
     name = next(v for k, v in NAMES.items() if r["router"].startswith(k))
     kind = "hosted" if r["group"] == "Hosted closed" else ("cpu" if "local CPU" in r["router"] else "openrouter")
     rows.append(dict(
         name=name, kind=kind,
-        right=float(r["accuracy"]) * 100,
-        weak=float(r["under_routing"]) * 100,      # sent to a weaker tier than needed
-        danger=round(float(r["hard_to_cheap"]) * N_HARD * runs) / n * 100,
-        cost=float(r["cost_per_1k_usd"]), lat=float(r["lat_p50_ms"])))
+        right=r["n_correct"] / n * 100,
+        weak=r["n_under"] / n * 100,         # sent to a weaker tier than needed
+        danger=r["n_hard_to_cheap"] / n * 100,     # hard task -> cheapest tier, per 100 requests
+        cost=r["cost_sum_usd"] / n * 1000, lat=r["lat_p50_ms"]))
 mx = max(r["cost"] for r in rows)   # most expensive router = 100%
 for r in rows:
     r["rel"] = r["cost"] / mx * 100
@@ -144,7 +144,7 @@ dl.plot([0.0, 0.05], [0.5, 0.5], ls=(0, (1.2, 2.4)), lw=3, color=INK, dash_capst
 dl.text(0.065, 0.5, "routers nobody beats on both price and accuracy", fontsize=16.5, va="center", color=INK)
 
 fig.text(0.045, 0.018,
-         "67 one line coding requests, 3 runs each, my 2 rules. Labels are my judgement; gaps under ~10 points\n"
+         "67 one line coding requests, 3 runs each, my 2 rules. Labels are my judgement; gaps under about 10 points\n"
          f"are mostly noise. * open-weight, via OpenRouter as a stand in for self-hosting. 100% = ${mx:.4f} per 1,000.",
          fontsize=13.5, color=MUTED, va="bottom", linespacing=1.35)
 

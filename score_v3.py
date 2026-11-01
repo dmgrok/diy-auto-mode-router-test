@@ -37,7 +37,7 @@ def ece(c,k,nb=5):
     m=(c>lo)&(c<=lo+1/nb) if lo>0 else (c<=1/nb)
     if m.sum(): e+=m.sum()/len(c)*abs(c[m].mean()-k[m].mean())
   return float(e)
-rows=[];maj={}
+rows=[];maj={};counts=[]  # counts: raw integers, so charts/report can round once from exact values
 for g,nm,mode,rs,cal in E:
   lab=[qs[r["id"]]["label"] for r in rs]; pr=[r["pred"] for r in rs]
   acc=np.mean([p==l for p,l in zip(pr,lab)])
@@ -55,6 +55,14 @@ for g,nm,mode,rs,cal in E:
     if cc: E_=ece([min(c,1) for c,_ in cc],[k for _,k in cc])
   pf=np.mean([r.get("parse_ok",True)==False for r in rs])
   m={k:Counter(v).most_common(1)[0][0] for k,v in by.items()}; maj[f"{nm} | {mode}"]=m
+  counts.append({"group":g,"router":nm,"mode":mode,"runs":runs,"n_decisions":len(rs),
+    "n_correct":int(sum(p==l for p,l in zip(pr,lab))),"n_hard":int(sum(l=="frontier" for l in lab)),
+    "n_hard_to_cheap":int(sum(p=="cheap" for p,l in zip(pr,lab) if l=="frontier")),
+    "n_hard_not_frontier":int(sum(p!="frontier" for p,l in zip(pr,lab) if l=="frontier")),
+    "n_easy":int(sum(l=="cheap" for l in lab)),"n_cheap_to_frontier":int(sum(p=="frontier" for p,l in zip(pr,lab) if l=="cheap")),
+    "n_over":int(sum(IDX[p]>IDX[l] for p,l in zip(pr,lab))),"n_under":int(sum(IDX[p]<IDX[l] for p,l in zip(pr,lab))),
+    "cost_sum_usd":float(sum(r.get("cost",0) or 0 for r in rs)),"lat_p50_ms":float(np.percentile(lat,50)),
+    "lat_p95_ms":float(np.percentile(lat,95)),"n_queries":len(by),"n_consistent":int(sum(len(set(v))==1 for v in by.values()))})
   rows.append({"group":g,"router":nm,"mode":mode,"runs":runs,"n_decisions":len(rs),"accuracy":round(acc,3),"hard_to_cheap":round(f2c,3),"hard_not_frontier":round(fm,3),
     "cheap_to_frontier":round(c2f,3),"over_routing":round(over,3),"under_routing":round(under,3),"lat_p50_ms":round(float(np.percentile(lat,50)),1),"lat_p95_ms":round(float(np.percentile(lat,95)),1),
     "cost_per_1k_usd":round(cost,4),"consistency":round(cons,3),"ece":None if E_ is None else round(E_,3),"parse_fail":round(pf,3),
@@ -67,5 +75,5 @@ for nm,k in [("Arch-Router 1.5B (appendix; licence)","Arch-Router 1.5B (local CP
 keys=list(rows[0]); 
 with open(os.path.join(R,"summary.csv"),"w",newline="") as f:
   w=csv.DictWriter(f,fieldnames=keys); w.writeheader(); [w.writerow({k:r.get(k) for k in keys}) for r in rows]
-json.dump({"rows":rows},open(os.path.join(R,"summary.json"),"w"),indent=1); json.dump(maj,open(os.path.join(R,"per_query_majority.json"),"w"),indent=1)
+json.dump({"rows":rows},open(os.path.join(R,"summary.json"),"w"),indent=1); json.dump({"rows":counts},open(os.path.join(R,"counts.json"),"w"),indent=1); json.dump(maj,open(os.path.join(R,"per_query_majority.json"),"w"),indent=1)
 for r in rows: print(f"{r['group'][:6]:6} {r['router'][:40]:40} {r['mode'][:12]:12} acc {r['accuracy']:.2f} h2c {r['hard_to_cheap']:.2f} hnf {r['hard_not_frontier']:.2f} c2f {r.get('cheap_to_frontier')} p50 {r.get('lat_p50_ms')} $1k {r.get('cost_per_1k_usd')} cons {r.get('consistency')} ece {r.get('ece')} q07 {r['q07']} q48 {r['q48']} runs {r['runs']}")

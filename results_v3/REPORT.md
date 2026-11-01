@@ -3,7 +3,7 @@ Run 2026-11-01, ~16:35–16:55 (UTC+1). `queries.jsonl` v2 (67 queries, David's 
 
 **Takeaway:**
 - **With David's two rules, an open-weight model routed best.** Qwen3-235B-A22B-2507 scored 85% vs Jev's 74% (paired bootstrap +10.4 pts, 95% CI +1.5 to +19.4). Mistral Small 3.2 (81%) and gpt-oss-120b (78%) are also ahead of Jev, but within noise.
-- **The rules cut Jev's dangerous hard→cheap rate in half (9% → 4%)**, but its accuracy stayed at 74%: the "ripple" check also pushed 5 mid tasks to frontier.
+- **The rules cut Jev's dangerous hard→cheap rate in half (9% → 4.5%)**, but its accuracy stayed at 74%: the "ripple" check also pushed 5 mid tasks to frontier.
 - **Jev is still by far the fastest hosted option**, at 164 ms p50 vs 0.6–1.2 s for the open-weight LLMs over OpenRouter, and has the best-calibrated probabilities (ECE 0.115).
 - **The small open decision models that run on this CPU are clearly weaker.** The best is GLiClass v4 edge at 70% with rules and ~0.9 s per call.
 - **q48 (URGENT) now goes to frontier for every router with rules. q07 (lodash 4.17.20→4.17.21) goes to cheap for every router.** It is a *patch* bump, so no model judged that it "could ripple across the codebase". David's rule as written doesn't capture "any dependency bump" (see recommendation).
@@ -28,37 +28,37 @@ Run 2026-11-01, ~16:35–16:55 (UTC+1). `queries.jsonl` v2 (67 queries, David's 
 
 ### Hosted closed
 
-| Router | Rules | Runs | Accuracy | Hard→cheap | Hard not→frontier | Over / under | p50 / p95 ms | $ per 1k | Consistent 3/3 | ECE | q07 | q48 |
+| Router | Rules | Runs | Accuracy | Hard→cheap (of 66) | Hard not→frontier | Over / under | p50 / p95 ms | $ per 1k | Consistent 3/3 | ECE | q07 | q48 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| Jev 1.14 (OpenRouter) | no rules | 3 | **74%** | 9% | 41% | 10% / 15% | 164 / 236 | $0.0243 | 98% | 0.115 | cheap | cheap |
-| Jev 1.14 (OpenRouter) | rules | 3 | **74%** | 4% | 18% | 18% / 8% | 164 / 236 | $0.0243 | 98% | – | cheap | frontier |
+| Jev 1.14 (OpenRouter) | no rules | 3 | **74%** | 9.1% | 41% | 10% / 15% | 164 / 236 | $0.0243 | 99% | 0.115 | cheap | cheap |
+| Jev 1.14 (OpenRouter) | rules | 3 | **74%** | 4.5% | 18% | 18% / 8% | 164 / 236 | $0.0243 | 99% | – | cheap | frontier |
 
 ### Open weights
 
-| Router | Rules | Runs | Accuracy | Hard→cheap | Hard not→frontier | Over / under | p50 / p95 ms | $ per 1k | Consistent 3/3 | ECE | q07 | q48 |
+| Router | Rules | Runs | Accuracy | Hard→cheap (of 66) | Hard not→frontier | Over / under | p50 / p95 ms | $ per 1k | Consistent 3/3 | ECE | q07 | q48 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| gpt-oss-120b (via OpenRouter) | no rules | 3 | **81%** | 12% | 17% | 4% / 15% | 908 / 2375 | $0.0204 | 91% | 0.124 | cheap | cheap |
-| gpt-oss-120b (via OpenRouter) | rules | 3 | **78%** | 9% | 17% | 8% / 13% | 918 / 2510 | $0.0257 | 87% | – | cheap | frontier |
-| gpt-oss-20b (via OpenRouter) | no rules | 3 | **66%** | 18% | 76% | 4% / 29% | 568 / 1529 | $0.0038 | 96% | 0.258 | cheap | cheap |
-| gpt-oss-20b (via OpenRouter) | rules | 3 | **77%** | 6% | 41% | 2% / 21% | 624 / 1498 | $0.0047 | 92% | – | cheap | frontier |
-| Qwen3-235B-A22B-2507 (via OpenRouter) | no rules | 3 | **80%** | 4% | 23% | 13% / 8% | 1024 / 2436 | $0.0335 | 97% | 0.144 | cheap | mid |
-| Qwen3-235B-A22B-2507 (via OpenRouter) | rules | 3 | **85%** | 4% | 9% | 11% / 4% | 1235 / 2960 | $0.0392 | 97% | – | cheap | frontier |
-| Mistral Small 3.2 24B (via OpenRouter) | no rules | 3 | **79%** | 9% | 17% | 15% / 6% | 1202 / 2256 | $0.0246 | 97% | 0.139 | cheap | cheap |
-| Mistral Small 3.2 24B (via OpenRouter) | rules | 3 | **81%** | 4% | 14% | 13% / 6% | 1178 / 2096 | $0.0309 | 100% | – | cheap | frontier |
-| Llama-3.1-8B delimited (via OpenRouter) | no rules | 3 | **70%** | 9% | 58% | 8% / 22% | 750 / 1350 | $0.0073 | 82% | 0.187 | cheap | mid |
-| Llama-3.1-8B delimited (via OpenRouter) | rules | 3 | **65%** | 14% | 67% | 6% / 29% | 813 / 1393 | $0.0080 | 78% | – | cheap | frontier |
-| vela3-fast 0.4B (local CPU) | no rules | 3 | **60%** | 18% | 55% | 4% / 36% | 1293 / 1708 | $0 (local) | 100% | 0.279 | cheap | mid |
-| vela3-fast 0.4B (local CPU) | rules | 3 | **63%** | 18% | 46% | 6% / 31% | 1293 / 1708 | $0 (local) | 100% | – | cheap | frontier |
-| d3-lite 0.8B (local CPU) | no rules | 3 | **54%** | 17% | 80% | 3% / 43% | 2128 / 2879 | $0 (local) | 94% | 0.248 | cheap | mid |
-| d3-lite 0.8B (local CPU) | rules | 3 | **59%** | 15% | 61% | 4% / 36% | 2128 / 2879 | $0 (local) | 94% | – | cheap | frontier |
-| GLiClass v4 edge 0.4B (local CPU) | no rules | 3 | **67%** | 11% | 55% | 3% / 30% | 928 / 1320 | $0 (local) | 98% | 0.328 | cheap | mid |
-| GLiClass v4 edge 0.4B (local CPU) | rules | 3 | **70%** | 11% | 46% | 4% / 27% | 928 / 1320 | $0 (local) | 97% | – | cheap | frontier |
-| NadirClaw DistilBERT (local CPU) | no rules | 3 | **46%** | 9% | 73% | 28% / 25% | 28 / 55 | $0 (local) | 100% | 0.49 | mid | cheap |
-| NadirClaw DistilBERT (local CPU) | rules (via GLiClass rule checks) | 3 | **50%** | 4% | 59% | 29% / 21% | 958 / 1345 | $0 (local) | 98% | – | mid | frontier |
+| gpt-oss-120b (via OpenRouter) | no rules | 3 | **81%** | 12.1% | 17% | 3% / 15% | 908 / 2375 | $0.0204 | 91% | 0.124 | cheap | cheap |
+| gpt-oss-120b (via OpenRouter) | rules | 3 | **78%** | 9.1% | 17% | 8% / 13% | 918 / 2510 | $0.0257 | 87% | – | cheap | frontier |
+| gpt-oss-20b (via OpenRouter) | no rules | 3 | **66%** | 18.2% | 76% | 4% / 29% | 568 / 1529 | $0.0038 | 96% | 0.258 | cheap | cheap |
+| gpt-oss-20b (via OpenRouter) | rules | 3 | **77%** | 6.1% | 41% | 2% / 21% | 624 / 1498 | $0.0047 | 93% | – | cheap | frontier |
+| Qwen3-235B-A22B-2507 (via OpenRouter) | no rules | 3 | **80%** | 4.5% | 23% | 13% / 7% | 1024 / 2436 | $0.0335 | 97% | 0.144 | cheap | mid |
+| Qwen3-235B-A22B-2507 (via OpenRouter) | rules | 3 | **85%** | 4.5% | 9% | 11% / 4% | 1235 / 2960 | $0.0392 | 97% | – | cheap | frontier |
+| Mistral Small 3.2 24B (via OpenRouter) | no rules | 3 | **79%** | 9.1% | 17% | 15% / 6% | 1202 / 2256 | $0.0246 | 97% | 0.139 | cheap | cheap |
+| Mistral Small 3.2 24B (via OpenRouter) | rules | 3 | **81%** | 4.5% | 14% | 13% / 6% | 1178 / 2096 | $0.0309 | 100% | – | cheap | frontier |
+| Llama-3.1-8B delimited (via OpenRouter) | no rules | 3 | **70%** | 9.1% | 58% | 8% / 22% | 750 / 1350 | $0.0073 | 82% | 0.187 | cheap | mid |
+| Llama-3.1-8B delimited (via OpenRouter) | rules | 3 | **65%** | 13.6% | 67% | 6% / 29% | 813 / 1393 | $0.0080 | 78% | – | cheap | frontier |
+| vela3-fast 0.4B (local CPU) | no rules | 3 | **60%** | 18.2% | 55% | 4% / 36% | 1293 / 1708 | $0 (local) | 100% | 0.279 | cheap | mid |
+| vela3-fast 0.4B (local CPU) | rules | 3 | **63%** | 18.2% | 45% | 6% / 31% | 1293 / 1708 | $0 (local) | 100% | – | cheap | frontier |
+| d3-lite 0.8B (local CPU) | no rules | 3 | **54%** | 16.7% | 80% | 3% / 43% | 2128 / 2879 | $0 (local) | 94% | 0.248 | cheap | mid |
+| d3-lite 0.8B (local CPU) | rules | 3 | **59%** | 15.2% | 61% | 4% / 36% | 2128 / 2879 | $0 (local) | 94% | – | cheap | frontier |
+| GLiClass v4 edge 0.4B (local CPU) | no rules | 3 | **67%** | 10.6% | 55% | 3% / 30% | 928 / 1320 | $0 (local) | 99% | 0.328 | cheap | mid |
+| GLiClass v4 edge 0.4B (local CPU) | rules | 3 | **70%** | 10.6% | 45% | 3% / 27% | 928 / 1320 | $0 (local) | 97% | – | cheap | frontier |
+| NadirClaw DistilBERT (local CPU) | no rules | 3 | **46%** | 9.1% | 73% | 28% / 25% | 28 / 55 | $0 (local) | 100% | 0.49 | mid | cheap |
+| NadirClaw DistilBERT (local CPU) | rules (via GLiClass rule checks) | 3 | **50%** | 4.5% | 59% | 29% / 21% | 958 / 1345 | $0 (local) | 99% | – | mid | frontier |
 
 ### Appendix
 
-| Router | Rules | Runs | Accuracy | Hard→cheap | Hard not→frontier | Over / under | p50 / p95 ms | $ per 1k | Consistent 3/3 | ECE | q07 | q48 |
+| Router | Rules | Runs | Accuracy | Hard→cheap (of 22) | Hard not→frontier | Over / under | p50 / p95 ms | $ per 1k | Consistent 3/3 | ECE | q07 | q48 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | Arch-Router 1.5B (appendix; licence) | no rules (v2, majority vote) | 3 | **58%** | 14% | 27% | – / – | – | – | – | – | cheap | frontier |
 | RouteLLM BERT (appendix; below chance) | no rules (v2, majority vote) | 3 | **36%** | 41% | 41% | – / – | – | – | – | – | frontier | cheap |
@@ -73,15 +73,15 @@ ECE is the calibration error of the no-rules tier confidence: route probabilitie
   - 5 mid-labelled (q27, q29, q32, q39, q55, i.e. multi-file but pattern-based work), which were pushed to frontier.
   - Net: under-routing 15% → 8%, over-routing 10% → 18%, accuracy unchanged.
   - The local decision models fired the ripple check far less often (4–5 queries), so the rules helped them less.
-- **LLMs:** the rules helped gpt-oss-20b most (66% → 77%; hard→cheap 18% → 6%), then Qwen3 (+5) and Mistral (+2). They slightly hurt gpt-oss-120b (−3) and Llama-3.1-8B (−5; hard→cheap 9% → 14%), where the extra text confused the 8B model.
+- **LLMs:** the rules helped gpt-oss-20b most (66% → 77%; hard→cheap 18% → 6%), then Qwen3 (+5) and Mistral (+1.5). They slightly hurt gpt-oss-120b (−3) and Llama-3.1-8B (−5; hard→cheap 9% → 14%), where the extra text confused the 8B model.
 
 ## Best open-weight option vs Jev
 - **Best overall: Qwen3-235B-A22B-2507 with rules.**
-  - 85% accuracy, 4% hard→cheap, 9% hard not sent to frontier, 97% consistent.
+  - 85% accuracy, 4.5% hard→cheap, 9% hard not sent to frontier, 97% consistent.
   - Trade-offs vs Jev: ~1.2 s vs 0.16 s p50 over OpenRouter, $0.039 vs $0.024 per 1k decisions.
   - Self-hosting it needs a multi-GPU server (235B total / 22B active parameters, roughly 4×80 GB GPUs at FP8). Not possible on this box.
 - **Best small self-hostable model: gpt-oss-20b with rules.** 77% (+3 vs Jev), 6% hard→cheap, $0.0047 per 1k via OpenRouter. Self-hosting fits on one ~16–24 GB GPU. Its weakness: 41% of hard tasks are not sent to frontier.
-- **Mistral Small 3.2 24B with rules:** 81%, 4% hard→cheap, 100% consistent. One 48–80 GB GPU, or ~24 GB quantized.
+- **Mistral Small 3.2 24B with rules:** 81%, 4.5% hard→cheap, 100% consistent. One 48–80 GB GPU, or ~24 GB quantized.
 - **Best that runs on this CPU box: GLiClass v4 edge with rules.** 70%, 11% hard→cheap, ~0.9 s p50 for 3 questions. vela3-fast (63%, ~1.3 s) and d3-lite (59%, ~2.1 s, slow fallback kernels on CPU) are behind it. NadirClaw is very fast (28 ms) but only 46–50%.
 - The latencies for OpenRouter-hosted open models come from someone else's GPUs. A self-hosted deployment could be much faster or slower depending on the hardware.
 
@@ -127,6 +127,6 @@ Cumulative key usage across v1–v3 is $0.052, under the $2 cap. Local models: $
 - **Same prompt for everyone:** the tier descriptions were not tuned per model. One-line queries without repo context.
 
 ## Files
-- `results_v3/summary.csv`, `results_v3/summary.json`, `results_v3/per_query_majority.json`, `results_v3/chart.png`, `results_v3/REPORT.md`
+- `results_v3/summary.csv`, `results_v3/summary.json`, `results_v3/counts.json` (raw integer counts; the table and charts round once from these), `results_v3/per_query_majority.json`, `results_v3/chart.png`, `results_v3/REPORT.md`
 - `results_v3/raw/*.jsonl`: every decision, including P(urgent)/P(ripple) for decision models. No secrets.
 - Code: `decision_common.py` (shared questions and rule), `run_jev_v3.py`, `run_llm_v3.py`, `local_backends.py`, `run_local.py`, `score_v3.py`, `chart_v3.py`.
