@@ -1,0 +1,11 @@
+# Hosted routers (Jev, OpenRouter LLMs) and scoring
+requests>=2.31
+numpy>=1.26
+matplotlib>=3.8
+# Local CPU routers (run_local.py, run_bert.py)
+torch>=2.4
+transformers>=4.46
+huggingface_hub>=0.25
+gliclass>=0.1.22
+# Arch-Router (run_arch.py); the GGUF is downloaded separately, see README
+llama-cpp-python>=0.3

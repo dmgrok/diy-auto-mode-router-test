@@ -49,7 +49,7 @@ OpenRouter key usage after all runs: **$0.0066** total (logged per-call sum $0.0
 - **Small n**: 57 queries; a ±10-point gap is within noise (95% CI on 76% ≈ ±11 pts). Jev vs delimited-Llama (76% vs 70%) is suggestive, not conclusive. Jev's lead on calibration, the dangerous case and consistency is clearer.
 - **Prompt sensitivity**: all prompt-based routers used one set of tier descriptions; no prompt tuning was done for any router. Jev's choice criteria were the same text.
 - Arch-Router and RouteLLM were **not built for difficulty routing** (Arch = domain/action preferences; RouteLLM = trained on 2024 GPT-4-vs-Mixtral Chatbot Arena preferences). Their poor scores say "wrong tool for this job", not "bad models". RouteLLM's recommended `mf` router needs OpenAI embeddings (no key) and `causal_llm` needs a GPU; only `bert` was tested.
-- **Latency**: from this box (Europe) to OpenRouter; Jev is served from the US. Local latencies on 8 vCPU, no GPU; Arch-Router's ~1.7 s would drop sharply on GPU. RouteLLM BERT 29 ms is CPU inference only.
+- **Latency**: from the test machine (Europe) to OpenRouter; Jev is served from the US. Local latencies on 8 vCPU, no GPU; Arch-Router's ~1.7 s would drop sharply on GPU. RouteLLM BERT 29 ms is CPU inference only.
 - Queries are short one-liners with no repo context; real agent prompts are longer (affects Jev cost, which is per input token, and possibly accuracy).
 - "Router cost per 1k" is the routing decision cost only; downstream savings depend on your model prices.
 

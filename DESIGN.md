@@ -1,6 +1,6 @@
 # Router comparison: Jev vs Arch-Router vs RouteLLM vs small-LLM baseline
 Scope: route agentic-coding prompts by **difficulty only** to one of 3 tiers: `cheap` / `mid` / `frontier`.
-Status: prepared, not run. Prepared 2026-11-01.
+Status: run (v3, 2026-11-01). This is the original plan, kept as written; the test grew while it ran (67 queries, 10 routers, my two policy rules). For what was actually run and the results, see `README.md` and `results_v3/REPORT.md`.
 
 ## 1. Dataset — `queries.jsonl` (57 queries)
 Fields: `id, category, query, label, rationale`. Balanced 19/19/19 across labels.
@@ -40,7 +40,7 @@ Alternatives: AI SDK ≥7.0.105 `experimental_evaluate`/`experimental_decide`, `
 - **Over-routing rate**: predicted tier > label (wasted cost). Report cheap→frontier separately (worst waste).
 - **Under-routing rate**: predicted tier < label (quality risk). Report frontier→cheap separately (worst risk). Weighted error: under-routing ×2 vs over-routing ×1 (tunable).
 - **Expected cost of routed traffic**: Σ tier price for the 57 queries vs "always frontier" and "always mid" (assumed per-task costs, e.g. cheap $0.002, mid $0.02, frontier $0.20 — document the assumptions).
-- **Latency per decision**: p50 / p95 wall-clock over 3 runs, warm. Note Jev is served from US (West Coast) — record client region (box).
+- **Latency per decision**: p50 / p95 wall-clock over 3 runs, warm. Note Jev is served from US (West Coast) — record the client region.
 - **Cost per 1k decisions**: tokens × price (Jev $0.042/M input, output free); local models = $0 API + CPU time.
 - **Calibration** (where probabilities exist: Jev, RouteLLM score, Arch-Router logprobs, baseline logprobs): Brier score, ECE (5 bins), and accuracy at confidence ≥0.8 with coverage.
 - **Consistency**: same query 3× → agreement rate (Jev claims determinism-ish; LLMs at temp 0 too).
@@ -56,7 +56,7 @@ Alternatives: AI SDK ≥7.0.105 `experimental_evaluate`/`experimental_decide`, `
 ## 5. Optional label validation (recommended on a subset)
 Labels are subjective. Take ~18 queries (6 per label) that can be made concrete (small fixture repo or self-contained snippet with a test). Run each through a **cheap** model and a **frontier** model (single attempt, same harness), grade pass/fail by test or rubric. Relabel rule: cheap passes → `cheap`; only frontier passes → `frontier`; both fail → drop or `frontier`; disagreements with our label are reported. Optionally add a mid model for 3-way. Cost estimate: ~$3–15 depending on models; ~1–2 h including building fixtures.
 
-## 6. Box feasibility (checked 2026-11-01)
+## 6. Test-machine feasibility (checked 2026-11-01)
 8 vCPU Intel Xeon (AVX2/AVX-512), 15 GiB RAM (~6 GiB free at check time), no GPU, 84 GB disk free, Python 3.13.
 - Arch-Router-1.5B: runs on CPU. ~3 GB bf16 / ~1.6 GB Q8 GGUF. Est. 1.5–4 s/decision with llama.cpp (prompt ~600–900 tokens incl. routes, ~10 output tokens); 5–15 s with transformers fp32. Must cap `max_new_tokens`≈32 (model card example uses 32768).
 - RouteLLM `bert` router: CPU OK, est. 0.1–0.5 s/decision. `mf`/`sw_ranking`: need OpenAI embeddings key (tiny cost). `causal_llm` (8B): not feasible here (RAM/no GPU).
@@ -64,7 +64,7 @@ Labels are subjective. Take ~18 queries (6 per label) that can be made concrete 
 - Jev: hosted only; vendor claims 70–500 ms end-to-end.
 
 ## 7. Estimated effort / cost for full run
-- Setup (deps, model downloads ~5 GB, harness + scorer): ~1.5–2 h agent time.
+- Setup (deps, model downloads ~5 GB, harness + scorer): ~1.5–2 h of work.
 - Runtime: 57 queries × 3 runs × 4 routers ≈ 684 decisions → local ones ~15–30 min total on CPU, Jev ~2 min.
 - API cost: Jev ≈ 171 calls × ~600 tokens ≈ 0.1 M tokens ≈ **<$0.01**; hosted baseline <$0.10; RouteLLM mf embeddings <$0.01. Validation step (optional) $3–15.
-- Blocker: needs an API credential for Jev (see report) — no free path confirmed.
+- Prerequisite: needs an API credential for Jev (see report) — no free path confirmed. (Resolved in the run: Jev was called through OpenRouter.)

@@ -79,10 +79,10 @@ ECE is the calibration error of the no-rules tier confidence: route probabilitie
 - **Best overall: Qwen3-235B-A22B-2507 with rules.**
   - 85% accuracy, 4.5% hard→cheap, 9% hard not sent to frontier, 97% consistent.
   - Trade-offs vs Jev: ~1.2 s vs 0.16 s p50 over OpenRouter, $0.039 vs $0.024 per 1k decisions.
-  - Self-hosting it needs a multi-GPU server (235B total / 22B active parameters, roughly 4×80 GB GPUs at FP8). Not possible on this box.
+  - Self-hosting it needs a multi-GPU server (235B total / 22B active parameters, roughly 4×80 GB GPUs at FP8). Not possible on the CPU-only test machine.
 - **Best small self-hostable model: gpt-oss-20b with rules.** 77% (+3 vs Jev), 6% hard→cheap, $0.0047 per 1k via OpenRouter. Self-hosting fits on one ~16–24 GB GPU. Its weakness: 41% of hard tasks are not sent to frontier.
 - **Mistral Small 3.2 24B with rules:** 81%, 4.5% hard→cheap, 100% consistent. One 48–80 GB GPU, or ~24 GB quantized.
-- **Best that runs on this CPU box: GLiClass v4 edge with rules.** 70%, 11% hard→cheap, ~0.9 s p50 for 3 questions. vela3-fast (63%, ~1.3 s) and d3-lite (59%, ~2.1 s, slow fallback kernels on CPU) are behind it. NadirClaw is very fast (28 ms) but only 46–50%.
+- **Best that runs on a CPU-only machine: GLiClass v4 edge with rules.** 70%, 11% hard→cheap, ~0.9 s p50 for 3 questions. vela3-fast (63%, ~1.3 s) and d3-lite (59%, ~2.1 s, slow fallback kernels on CPU) are behind it. NadirClaw is very fast (28 ms) but only 46–50%.
 - The latencies for OpenRouter-hosted open models come from someone else's GPUs. A self-hosted deployment could be much faster or slower depending on the hardware.
 
 ## Licences (checked on Hugging Face model cards)

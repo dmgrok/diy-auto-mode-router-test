@@ -10,12 +10,15 @@ from matplotlib import font_manager as fm
 from matplotlib.lines import Line2D
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-FONT_DIR = "/usr/share/fonts/truetype/sand-box/google/Be Vietnam Pro"
+# Be Vietnam Pro if you have it (point CHART_FONT_DIR at its .ttf files, or install it
+# system-wide); otherwise fall back to DejaVu Sans, which ships with matplotlib.
+FONT_DIR = os.environ.get("CHART_FONT_DIR", "")
 for w in ("Regular", "Medium", "Bold"):
     p = os.path.join(FONT_DIR, f"BeVietnamPro-{w}.ttf")
-    if os.path.exists(p):
+    if FONT_DIR and os.path.exists(p):
         fm.fontManager.addfont(p)
-plt.rcParams["font.family"] = ["Be Vietnam Pro", "DejaVu Sans"]
+_have = {f.name for f in fm.fontManager.ttflist}
+plt.rcParams["font.family"] = (["Be Vietnam Pro"] if "Be Vietnam Pro" in _have else []) + ["DejaVu Sans"]
 
 DANGER = "#D7263D"
 INK, MUTED, GRID = "#161616", "#666666", "#E6E6E6"

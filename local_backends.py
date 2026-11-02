@@ -1,15 +1,21 @@
-import sys, time, torch, numpy as np
+import os, sys, time, torch, numpy as np
 from common import TIERS
 from decision_common import QUESTIONS, state, state_text
-torch.set_num_threads(8)
-HF="/home/box/.cache/huggingface/hub/"
-V=HF+"models--vllm-sr--vela3-fast/snapshots/fa60e3aa41132c60bf05a84cabfdced39cb6d4f7"
-D=HF+"models--vllm-sr--d3-lite/snapshots/03560c26f5199c3c04129a2ccb38960c913635e0"
+torch.set_num_threads(int(os.environ.get("TORCH_THREADS", "8")))
+# Local model folders. Set VELA3_PATH / D3_LITE_PATH to a downloaded snapshot, or leave them
+# unset and the pinned revision is fetched into your normal Hugging Face cache (HF_HOME).
+def model_dir(env, repo, rev):
+  if os.environ.get(env): return os.environ[env]
+  from huggingface_hub import snapshot_download
+  return snapshot_download(repo, revision=rev)
+V_REPO, V_REV = "vllm-sr/vela3-fast", "fa60e3aa41132c60bf05a84cabfdced39cb6d4f7"
+D_REPO, D_REV = "vllm-sr/d3-lite", "03560c26f5199c3c04129a2ccb38960c913635e0"
 def norm_answers(a):
   return {"tier":a["tier"].get("choice"),"probs":a["tier"].get("probabilities"),"urgent":a["urgent"].get("noul"),"ripple":a["ripple"].get("noul")}
 class Vela:
   name="vela3_fast"
   def __init__(s):
+    V=model_dir("VELA3_PATH",V_REPO,V_REV)
     sys.path.insert(0,V); from vela3_encoder import DecisionEncoder; s.m=DecisionEncoder.load(V)
   def ask(s,q):
     if hasattr(s.m,"system_one"): out=s.m.system_one(state(q),QUESTIONS)["answers"]
@@ -18,6 +24,7 @@ class Vela:
 class D3:
   name="d3_lite"
   def __init__(s):
+    D=model_dir("D3_LITE_PATH",D_REPO,D_REV)
     from transformers import AutoModel; s.m=AutoModel.from_pretrained(D,trust_remote_code=True).eval()
   def ask(s,q):
     with torch.no_grad(): return norm_answers(s.m.system_one(state=state(q),questions=QUESTIONS)["answers"])
